@@ -1,48 +1,55 @@
 import { BrowserRouter, Routes, Route, Link, useParams } from "react-router-dom";
-import { useState } from "react";
 import "./App.css";
 
 function Home() {
   const documents = [
     {
       id: 1,
-      title: "MATH 151",
-      description: "Exercices + Corrigés par chapitres pour une meilleure compréhension progressive.",
+      type: "EXERCICES CORRIGÉS",
+      title: "Exercices Math 151",
+      description:
+        "Exercices corrigés, applications pratiques et méthodes détaillées pour maîtriser chaque chapitre et réussir vos évaluations.",
       price: "500 FCFA",
       image:
         "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=1200",
-      pdf: "/pdfs/math-exercices.pdf",
     },
     {
       id: 2,
-      title: "MATH 151",
-      description: "Sujets d’examens corrigés pour s’entraîner efficacement avant les évaluations.",
+      type: "EXAMENS CORRIGÉS",
+      title: "Examens Math 151",
+      description:
+        "Sujets d'examens corrigés, astuces de résolution et techniques efficaces pour préparer vos contrôles et examens.",
       price: "500 FCFA",
       image:
         "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1200",
-      pdf: "/pdfs/math-examens.pdf",
     },
   ];
 
   return (
     <div className="container">
 
-      {/* HERO */}
-      <div className="hero">
-        <div className="hero-badge">📚 2GE Learning Platform</div>
+      <section className="hero">
+
+        <div className="hero-badge">
+          📚 GENIUS Learning Platform
+        </div>
 
         <h1>
-          <span className="hero-gradient">Mathématiques</span><br />
-          pour Agronomie
+          Réussissez vos examens de
+          <span className="hero-gradient">
+            {" "}Mathématiques
+          </span>
         </h1>
 
         <p>
-          Accès simple et rapide à des documents PDF de qualité :
-          cours, exercices et examens corrigés pour progresser efficacement.
+          Accédez à des ressources académiques de qualité conçues
+          pour les étudiants en Agronomie.
+          Exercices corrigés, examens corrigés et méthodes efficaces
+          pour améliorer vos résultats.
         </p>
-      </div>
 
-      {/* CARDS */}
+      </section>
+
       <div className="cards">
         {documents.map((doc) => (
           <div key={doc.id} className="card">
@@ -50,6 +57,11 @@ function Home() {
             <img src={doc.image} alt={doc.title} />
 
             <div className="card-content">
+
+              <div className="document-type">
+                {doc.type}
+              </div>
+
               <h2>{doc.title}</h2>
 
               <p>{doc.description}</p>
@@ -59,48 +71,61 @@ function Home() {
               </div>
 
               <Link to={`/document/${doc.id}`}>
-                <button>Acheter maintenant</button>
+                <button>
+                  Acheter maintenant
+                </button>
               </Link>
+
             </div>
 
           </div>
         ))}
       </div>
+
     </div>
   );
 }
 
 function DocumentPage() {
   const { id } = useParams();
-  const [paid, setPaid] = useState(false);
 
-  const whatsappNumber = "22890537817";
+  const whatsappNumber = "22897032655";
 
   const documents = [
     {
       id: 1,
-      title: "MATH 151",
-      description: "Exercices + Corrigés par chapitres",
-      pdf: "/pdfs/math-exercices.pdf",
+      title: "Exercices Math 151",
+      description:
+        "Exercices corrigés et applications pratiques par chapitres.",
     },
     {
       id: 2,
-      title: "MATH 151",
-      description: "Sujets d’examens corrigés",
-      pdf: "/pdfs/math-examens.pdf",
+      title: "Examens Math 151",
+      description:
+        "Sujets d'examens corrigés et méthodes détaillées.",
     },
   ];
 
-  const document = documents.find((d) => d.id === Number(id));
+  const document = documents.find(
+    (d) => d.id === Number(id)
+  );
 
   if (!document) {
-    return <h2 style={{ padding: "20px" }}>Document introuvable</h2>;
+    return (
+      <h2 style={{ padding: "20px" }}>
+        Document introuvable
+      </h2>
+    );
   }
 
   return (
     <div className="payment-page">
 
       <div className="payment-card">
+
+        <div className="document-type">
+          PDF PREMIUM
+        </div>
 
         <h1>{document.title}</h1>
 
@@ -109,42 +134,73 @@ function DocumentPage() {
         <h2>500 FCFA</h2>
 
         <div className="payment-box">
+
           <h3>💳 Paiement Mobile Money</h3>
 
-          <p><strong>Mixx by Yas :</strong> 90537817</p>
-          <p><strong>Nom :</strong> 2GE</p>
+          <p>
+            <strong>Mixx by Yas :</strong> 90537817
+          </p>
+
+          <p>
+            <strong>Nom :</strong> GENIUS
+          </p>
 
           <br />
 
-          <p><strong>Flooz :</strong> 96606377</p>
-          <p><strong>Nom :</strong> 2GE</p>
+          <p>
+            <strong>Flooz :</strong> 96606377
+          </p>
+
+          <p>
+            <strong>Nom :</strong> GENIUS
+          </p>
+
         </div>
 
-        {!paid ? (
-          <button className="pay-button" onClick={() => setPaid(true)}>
-            J’ai payé
-          </button>
-        ) : (
-          <>
-            <a
-              className="whatsapp-button"
-              target="_blank"
-              rel="noreferrer"
-              href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-                `Bonjour 2GE, j’ai payé ${document.title} (${document.description})`
-              )}`}
-            >
-              Contacter 2GE sur WhatsApp
-            </a>
+        <div className="payment-box">
 
-            <a className="download-button" href={document.pdf} download>
-              Télécharger le document
-            </a>
-          </>
-        )}
+          <h3>
+            📋 Comment recevoir votre document ?
+          </h3>
 
-        <br />
-        <Link to="/">← Retour</Link>
+          <p>1. Effectuez le paiement.</p>
+
+          <p>2. Faites une capture d'écran.</p>
+
+          <p>3. Cliquez sur le bouton WhatsApp.</p>
+
+          <p>4. Envoyez votre preuve de paiement.</p>
+
+          <p>5. Recevez votre PDF après validation.</p>
+
+        </div>
+
+        <div className="payment-box">
+
+          <h3>✅ Garantie</h3>
+
+          <p>
+            Après vérification du paiement,
+            votre document sera envoyé rapidement
+            sur WhatsApp.
+          </p>
+
+        </div>
+
+        <a
+          className="whatsapp-button"
+          target="_blank"
+          rel="noreferrer"
+          href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+            `Bonjour GENIUS, je viens d'effectuer le paiement pour "${document.title}". Je vous envoie ma preuve de paiement afin de recevoir mon document PDF.`
+          )}`}
+        >
+          📱 Envoyer ma preuve de paiement
+        </a>
+
+        <Link to="/" className="back-link">
+          ← Retour à l'accueil
+        </Link>
 
       </div>
 
@@ -156,8 +212,17 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/document/:id" element={<DocumentPage />} />
+
+        <Route
+          path="/"
+          element={<Home />}
+        />
+
+        <Route
+          path="/document/:id"
+          element={<DocumentPage />}
+        />
+
       </Routes>
     </BrowserRouter>
   );
