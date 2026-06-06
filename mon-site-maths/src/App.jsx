@@ -1,228 +1,185 @@
-import { BrowserRouter, Routes, Route, Link, useParams } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import "./App.css";
 
+/* ================= HOME ================= */
 function Home() {
-  const documents = [
-    {
-      id: 1,
-      type: "EXERCICES CORRIGÉS",
-      title: "Exercices Math 151",
-      description:
-        "Exercices corrigés, applications pratiques et méthodes détaillées pour maîtriser chaque chapitre et réussir vos évaluations.",
-      price: "500 FCFA",
-      image:
-        "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=1200",
-    },
-    {
-      id: 2,
-      type: "EXAMENS CORRIGÉS",
-      title: "Examens Math 151",
-      description:
-        "Sujets d'examens corrigés, astuces de résolution et techniques efficaces pour préparer vos contrôles et examens.",
-      price: "500 FCFA",
-      image:
-        "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1200",
-    },
-  ];
+  const navigate = useNavigate();
+
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+
+  const join = () => {
+    if (!name || !phone) return;
+
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+
+    const newUser = {
+      id: Date.now(),
+      name,
+      phone,
+      status: "pending",
+      date: new Date().toLocaleDateString()
+    };
+
+    users.push(newUser);
+
+    localStorage.setItem("users", JSON.stringify(users));
+    localStorage.setItem("current_user", JSON.stringify(newUser));
+
+    navigate("/pending");
+  };
 
   return (
-    <div className="container">
+    <div className="page center">
 
-      <section className="hero">
+      <div className="card">
 
-        <div className="hero-badge">
-          📚 GENIUS Learning Platform
-        </div>
+        <div className="badge">GENIUS VIP</div>
 
-        <h1>
-          Réussissez vos examens de
-          <span className="hero-gradient">
-            {" "}Mathématiques
-          </span>
+        <h1 className="title">
+          GROUPE VIP<br />
+          <span>MATH 151</span>
         </h1>
 
-        <p>
-          Accédez à des ressources académiques de qualité conçues
-          pour les étudiants en Agronomie.
-          Exercices corrigés, examens corrigés et méthodes efficaces
-          pour améliorer vos résultats.
+        <p className="subtitle">
+          Accès aux cours, exercices corrigés et accompagnement jusqu’à l’examen.
         </p>
 
-      </section>
+        <input placeholder="Nom complet" onChange={(e) => setName(e.target.value)} />
+        <input placeholder="WhatsApp" onChange={(e) => setPhone(e.target.value)} />
 
-      <div className="cards">
-        {documents.map((doc) => (
-          <div key={doc.id} className="card">
+        <button onClick={join}>Rejoindre VIP - 1000 FCFA</button>
 
-            <img src={doc.image} alt={doc.title} />
-
-            <div className="card-content">
-
-              <div className="document-type">
-                {doc.type}
-              </div>
-
-              <h2>{doc.title}</h2>
-
-              <p>{doc.description}</p>
-
-              <div className="price-badge">
-                {doc.price}
-              </div>
-
-              <Link to={`/document/${doc.id}`}>
-                <button>
-                  Acheter maintenant
-                </button>
-              </Link>
-
-            </div>
-
-          </div>
-        ))}
       </div>
 
     </div>
   );
 }
 
-function DocumentPage() {
-  const { id } = useParams();
+/* ================= PENDING ================= */
+function Pending() {
+  const user = JSON.parse(localStorage.getItem("current_user"));
 
-  const whatsappNumber = "22897032655";
+  return (
+    <div className="page center">
 
-  const documents = [
-    {
-      id: 1,
-      title: "Exercices Math 151",
-      description:
-        "Exercices corrigés et applications pratiques par chapitres.",
-    },
-    {
-      id: 2,
-      title: "Examens Math 151",
-      description:
-        "Sujets d'examens corrigés et méthodes détaillées.",
-    },
-  ];
+      <div className="card highlight">
 
-  const document = documents.find(
-    (d) => d.id === Number(id)
+        <h2 className="status-title">
+          ⏳ EN ATTENTE DE VALIDATION
+        </h2>
+
+        <div className="info">
+          <p><b>Nom :</b> {user?.name}</p>
+          <p><b>WhatsApp :</b> {user?.phone}</p>
+        </div>
+
+        <div className="box">
+          Paiement requis : <b>1000 FCFA</b>
+        </div>
+
+        <a
+          className="wa"
+          href="https://wa.me/22897032655"
+          target="_blank"
+        >
+          Envoyer preuve WhatsApp
+        </a>
+
+      </div>
+
+    </div>
   );
+}
 
-  if (!document) {
+/* ================= ADMIN ================= */
+function Admin() {
+  const [auth, setAuth] = useState(false);
+  const [pass, setPass] = useState("");
+
+  const users = JSON.parse(localStorage.getItem("users") || "[]");
+
+  const validate = (id) => {
+    const updated = users.map(u =>
+      u.id === id ? { ...u, status: "approved" } : u
+    );
+
+    localStorage.setItem("users", JSON.stringify(updated));
+    window.location.reload();
+  };
+
+  if (!auth) {
     return (
-      <h2 style={{ padding: "20px" }}>
-        Document introuvable
-      </h2>
+      <div className="page center">
+        <div className="card">
+
+          <h2>Admin Panel</h2>
+
+          <input placeholder="Mot de passe" onChange={(e) => setPass(e.target.value)} />
+
+          <button onClick={() => setAuth(pass === "1234")}>
+            Connexion
+          </button>
+
+        </div>
+      </div>
     );
   }
 
   return (
-    <div className="payment-page">
+    <div className="admin">
 
-      <div className="payment-card">
+      <h2 className="admin-title">Dashboard VIP</h2>
 
-        <div className="document-type">
-          PDF PREMIUM
-        </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>WhatsApp</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
 
-        <h1>{document.title}</h1>
+        <tbody>
+          {users.map(u => (
+            <tr key={u.id}>
+              <td>{u.name}</td>
+              <td>{u.phone}</td>
 
-        <p>{document.description}</p>
+              <td className={u.status}>
+                {u.status}
+              </td>
 
-        <h2>500 FCFA</h2>
+              <td>{u.date}</td>
 
-        <div className="payment-box">
+              <td>
+                {u.status === "pending" ? (
+                  <button onClick={() => validate(u.id)}>Valider</button>
+                ) : (
+                  "OK"
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
 
-          <h3>💳 Paiement Mobile Money</h3>
-
-          <p>
-            <strong>Mixx by Yas :</strong> 90537817
-          </p>
-
-          <p>
-            <strong>Nom :</strong> GENIUS
-          </p>
-
-          <br />
-
-          <p>
-            <strong>Flooz :</strong> 96606377
-          </p>
-
-          <p>
-            <strong>Nom :</strong> GENIUS
-          </p>
-
-        </div>
-
-        <div className="payment-box">
-
-          <h3>
-            📋 Comment recevoir votre document ?
-          </h3>
-
-          <p>1. Effectuez le paiement.</p>
-
-          <p>2. Faites une capture d'écran.</p>
-
-          <p>3. Cliquez sur le bouton WhatsApp.</p>
-
-          <p>4. Envoyez votre preuve de paiement.</p>
-
-          <p>5. Recevez votre PDF après validation.</p>
-
-        </div>
-
-        <div className="payment-box">
-
-          <h3>✅ Garantie</h3>
-
-          <p>
-            Après vérification du paiement,
-            votre document sera envoyé rapidement
-            sur WhatsApp.
-          </p>
-
-        </div>
-
-        <a
-          className="whatsapp-button"
-          target="_blank"
-          rel="noreferrer"
-          href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-            `Bonjour GENIUS, je viens d'effectuer le paiement pour "${document.title}". Je vous envoie ma preuve de paiement afin de recevoir mon document PDF.`
-          )}`}
-        >
-          📱 Envoyer ma preuve de paiement
-        </a>
-
-        <Link to="/" className="back-link">
-          ← Retour à l'accueil
-        </Link>
-
-      </div>
+      </table>
 
     </div>
   );
 }
 
+/* ================= APP ================= */
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-
-        <Route
-          path="/"
-          element={<Home />}
-        />
-
-        <Route
-          path="/document/:id"
-          element={<DocumentPage />}
-        />
-
+        <Route path="/" element={<Home />} />
+        <Route path="/pending" element={<Pending />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </BrowserRouter>
   );
