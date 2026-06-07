@@ -3,18 +3,20 @@ import { useState } from "react";
 import "./App.css";
 
 /* ================= HOME ================= */
+
 function Home() {
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
 
-  const join = () => {
-    if (!name || !phone) return;
+  const joinVip = () => {
+    if (!name || !phone) {
+      alert("Veuillez remplir tous les champs");
+      return;
+    }
 
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-
-    const newUser = {
+    const user = {
       id: Date.now(),
       name,
       phone,
@@ -22,69 +24,213 @@ function Home() {
       date: new Date().toLocaleDateString()
     };
 
-    users.push(newUser);
-
-    localStorage.setItem("users", JSON.stringify(users));
-    localStorage.setItem("current_user", JSON.stringify(newUser));
+    localStorage.setItem("current_user", JSON.stringify(user));
 
     navigate("/pending");
   };
 
   return (
-    <div className="page center">
+    <div className="home">
 
-      <div className="card">
+      {/* HERO */}
 
-        <div className="badge">GENIUS VIP</div>
+      <section className="hero">
 
-        <h1 className="title">
-          GROUPE VIP<br />
-          <span>MATH 151</span>
+        <div className="hero-badge">
+          🔥 Places limitées
+        </div>
+
+        <h1>
+          Réussis <span>Math 151</span>
+          <br />
+          sans stress
         </h1>
 
-        <p className="subtitle">
-          Accès aux cours, exercices corrigés et accompagnement jusqu’à l’examen.
+        <p>
+          Rejoins le Groupe VIP Math 151 et accède à des
+          exercices corrigés, examens corrigés,
+          résolutions détaillées et un accompagnement
+          jusqu'à l'examen.
         </p>
 
-        <input placeholder="Nom complet" onChange={(e) => setName(e.target.value)} />
-        <input placeholder="WhatsApp" onChange={(e) => setPhone(e.target.value)} />
+      </section>
 
-        <button onClick={join}>Rejoindre VIP - 1000 FCFA</button>
+      {/* FEATURES */}
 
-      </div>
+      <section className="features">
+
+        <div className="feature-card">
+          <div className="icon">📚</div>
+          <h3>Exercices corrigés</h3>
+          <p>
+            Travaux dirigés détaillés avec méthodes
+            expliquées étape par étape.
+          </p>
+        </div>
+
+        <div className="feature-card">
+          <div className="icon">📝</div>
+          <h3>Examens corrigés</h3>
+          <p>
+            Anciens sujets et corrections complètes
+            pour maximiser tes chances.
+          </p>
+        </div>
+
+        <div className="feature-card">
+          <div className="icon">🎯</div>
+          <h3>Accompagnement</h3>
+          <p>
+            Assistance WhatsApp et réponses à tes
+            difficultés jusqu'à l'examen.
+          </p>
+        </div>
+
+      </section>
+
+      {/* BENEFITS */}
+
+      <section className="benefits">
+
+        <h2>Ce que tu reçois</h2>
+
+        <div className="benefits-list">
+
+          <div>✅ Exercices corrigés</div>
+          <div>✅ Examens corrigés</div>
+          <div>✅ Méthodes de résolution</div>
+          <div>✅ Documents PDF</div>
+          <div>✅ Accompagnement WhatsApp</div>
+          <div>✅ Groupe VIP privé</div>
+
+        </div>
+
+      </section>
+
+      {/* OFFER */}
+
+      <section className="offer">
+
+        <div className="offer-card">
+
+          <h2>Accès Groupe VIP Math 151</h2>
+
+          <div className="offer-price">
+            1000 FCFA
+          </div>
+
+          <p>
+            Paiement unique. Accès immédiat après validation.
+          </p>
+
+          <input
+            placeholder="Nom complet"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+
+          <input
+            placeholder="Numéro WhatsApp"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+
+          <button
+            className="join-btn"
+            onClick={joinVip}
+          >
+            Rejoindre le Groupe VIP
+          </button>
+
+        </div>
+
+      </section>
 
     </div>
   );
 }
 
 /* ================= PENDING ================= */
+
 function Pending() {
-  const user = JSON.parse(localStorage.getItem("current_user"));
+  const user = JSON.parse(
+    localStorage.getItem("current_user")
+  );
+
+  const copyText = (text) => {
+    navigator.clipboard.writeText(text);
+    alert("Numéro copié");
+  };
 
   return (
-    <div className="page center">
+    <div className="pending-page">
 
-      <div className="card highlight">
+      <div className="payment-card">
 
-        <h2 className="status-title">
+        <div className="status-badge">
           ⏳ EN ATTENTE DE VALIDATION
-        </h2>
-
-        <div className="info">
-          <p><b>Nom :</b> {user?.name}</p>
-          <p><b>WhatsApp :</b> {user?.phone}</p>
         </div>
 
-        <div className="box">
-          Paiement requis : <b>1000 FCFA</b>
+        <h1>Finalise ton inscription</h1>
+
+        <p>
+          Bonjour <strong>{user?.name}</strong>,
+          effectue le paiement puis envoie la preuve.
+        </p>
+
+        <div className="price">
+          1000 FCFA
+        </div>
+
+        {/* MIXX */}
+
+        <div className="payment-box">
+
+          <h3>📱 MIXX BY YAS</h3>
+
+          <div className="number">
+            90537817
+          </div>
+
+          <p>Nom : GENIUS</p>
+
+          <button
+            onClick={() => copyText("90537817")}
+          >
+            Copier le numéro
+          </button>
+
+        </div>
+
+        {/* FLOOZ */}
+
+        <div className="payment-box">
+
+          <h3>📱 FLOOZ</h3>
+
+          <div className="number">
+            96 60 63 77
+          </div>
+
+          <p>Nom : GENIUS</p>
+
+          <button
+            onClick={() => copyText("96606377")}
+          >
+            Copier le numéro
+          </button>
+
         </div>
 
         <a
-          className="wa"
-          href="https://wa.me/22897032655"
+          className="whatsapp-btn"
+          href={`https://wa.me/22897032655?text=${encodeURIComponent(
+            `Bonjour GENIUS, j'ai effectué le paiement de 1000 FCFA pour intégrer le Groupe VIP Math 151. Voici ma preuve de paiement.`
+          )}`}
           target="_blank"
+          rel="noreferrer"
         >
-          Envoyer preuve WhatsApp
+          📲 Envoyer ma preuve sur WhatsApp
         </a>
 
       </div>
@@ -94,93 +240,47 @@ function Pending() {
 }
 
 /* ================= ADMIN ================= */
+
 function Admin() {
-  const [auth, setAuth] = useState(false);
-  const [pass, setPass] = useState("");
-
-  const users = JSON.parse(localStorage.getItem("users") || "[]");
-
-  const validate = (id) => {
-    const updated = users.map(u =>
-      u.id === id ? { ...u, status: "approved" } : u
-    );
-
-    localStorage.setItem("users", JSON.stringify(updated));
-    window.location.reload();
-  };
-
-  if (!auth) {
-    return (
-      <div className="page center">
-        <div className="card">
-
-          <h2>Admin Panel</h2>
-
-          <input placeholder="Mot de passe" onChange={(e) => setPass(e.target.value)} />
-
-          <button onClick={() => setAuth(pass === "1234")}>
-            Connexion
-          </button>
-
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="admin">
+    <div className="admin-page">
 
-      <h2 className="admin-title">Dashboard VIP</h2>
+      <h1>Dashboard Admin</h1>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Nom</th>
-            <th>WhatsApp</th>
-            <th>Status</th>
-            <th>Date</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {users.map(u => (
-            <tr key={u.id}>
-              <td>{u.name}</td>
-              <td>{u.phone}</td>
-
-              <td className={u.status}>
-                {u.status}
-              </td>
-
-              <td>{u.date}</td>
-
-              <td>
-                {u.status === "pending" ? (
-                  <button onClick={() => validate(u.id)}>Valider</button>
-                ) : (
-                  "OK"
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-
-      </table>
+      <p>
+        Cette partie pourra être améliorée plus tard
+        avec Firebase ou Supabase.
+      </p>
 
     </div>
   );
 }
 
 /* ================= APP ================= */
+
 export default function App() {
   return (
     <BrowserRouter>
+
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/pending" element={<Pending />} />
-        <Route path="/admin" element={<Admin />} />
+
+        <Route
+          path="/"
+          element={<Home />}
+        />
+
+        <Route
+          path="/pending"
+          element={<Pending />}
+        />
+
+        <Route
+          path="/admin"
+          element={<Admin />}
+        />
+
       </Routes>
+
     </BrowserRouter>
   );
 }
